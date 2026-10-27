@@ -1,0 +1,89 @@
+import os
+import time
+
+
+white='\u001b[48;5;15m'
+green='\u001b[48;5;34m'
+dark_green='\u001b[48;2;0;106;78m'
+red='\u001b[48;5;160m'
+reset='\u001b[0m'
+begin='\u001b[1G'
+erase='\u001b[2K'
+
+
+def draw_flag():
+    for row in range(30):
+        for col in range(100):
+            if ((col - 45) / 2) ** 2 + (row - 14.5) ** 2 <= 10 ** 2:
+                print(red + " " + "\u001b[0m", end="")
+            else:
+                print(dark_green + " " + "\u001b[0m", end="")
+        print("\u001b[0m")
+
+
+def animation_pattern():
+    n=2
+    pattern=[
+        '1111110',
+        '1000010',
+        '1000010',
+        '1011110',
+        '1010000',
+        '1011110'
+    ]
+
+    for frame in range(1, 6):
+        for line in pattern:
+            for k in range(frame):
+                for cell in line:
+                    if cell=='1':
+                        print(f'{white}{" "*n}{reset}',end='')
+                    else:
+                        print(' '*n,end='')
+                print('  ',end='')
+            print()
+        time.sleep(1)
+        if frame<5:
+            print('\u001b[6A\u001b[J',end='')
+
+
+def sequence():
+    file = open('sequence.txt', 'r')
+    all = []
+    for line in file.readlines():
+        all.append(float(line.strip()))
+        
+    summ = 0
+    for i in range(len(all)):
+        summ += all[i]
+        summ = abs(summ)
+
+    first = 0
+    for i in range(125):
+        first += all[i]
+        first = abs(first)
+
+    second = 0
+    for i in range(126, 250):
+        second += all[i]
+        second = abs(second)
+
+    first_percent = first / summ * 100
+    second_percent = second / summ * 100
+
+    print('First:', round(first_percent), '%')
+    print('Second:', round(second_percent), '%')
+
+    print('First:  ', green, " " * round(first_percent), reset)
+    print('Second: ', red, " " * round(second_percent), reset)
+
+
+if __name__ == "__main__":
+    draw_flag()
+    print()
+    time.sleep(2)
+    animation_pattern()
+    print()
+    time.sleep(2)
+    print(f'{begin}{erase}', end='')
+    sequence()
